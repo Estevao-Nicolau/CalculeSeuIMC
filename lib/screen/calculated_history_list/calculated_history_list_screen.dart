@@ -6,10 +6,30 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../model/profile_model.dart';
 
-class ProfileListScreen extends StatelessWidget {
+class ProfileListScreen extends StatefulWidget {
   final List<ProfileModel> metricsList;
 
-  ProfileListScreen({super.key, required this.metricsList});
+  const ProfileListScreen({super.key, required this.metricsList});
+
+  @override
+  State<ProfileListScreen> createState() => _ProfileListScreenState();
+}
+
+class _ProfileListScreenState extends State<ProfileListScreen> {
+  final List<ProfileModel> profiles = [];
+
+  @override
+  void initState() {
+    super.initState();
+    loadSavedProfiles();
+  }
+
+  Future<void> loadSavedProfiles() async {
+    final savedProfiles = await getSavedProfiles();
+    setState(() {
+      profiles.addAll(savedProfiles);
+    });
+  }
 
   // Função para salvar o IMC em SharedPreferences
   Future<void> saveIMC(double imc) async {
@@ -41,19 +61,18 @@ class ProfileListScreen extends StatelessWidget {
       return [];
     }
   }
-  final List<ProfileModel> profiles = [];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView.builder(
-        itemCount: metricsList.length,
+        itemCount: profiles.length, // Use a lista profiles aqui
         itemBuilder: (context, index) {
-          final metrics = metricsList[index];
+          final metrics = profiles[index];
           final imc = metrics.calculateIMC(metrics.weight, metrics.height);
           final classification = metrics.getClassification(imc);
           saveIMC(imc);
-          profiles.add(metrics);
+          
           saveProfiles(profiles);
           return ProfileCard(
             profile: metrics,

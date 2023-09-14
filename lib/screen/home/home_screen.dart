@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:imc_calculator/model/profile_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../utils/custom_text_form_field.dart';
 import '../calculated_history_list/calculated_history_list_screen.dart';
@@ -17,6 +20,11 @@ class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _weightController = TextEditingController();
   final TextEditingController _heightController = TextEditingController();
   List<ProfileModel> metricsList = [];
+  Future<void> saveProfiles(List<ProfileModel> profiles) async {
+    final prefs = await SharedPreferences.getInstance();
+    final jsonProfiles = profiles.map((profile) => profile.toJson()).toList();
+    await prefs.setString('profiles', json.encode(jsonProfiles));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,8 +93,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 metrics.calculateIMC(weight, height);
                             metrics.classification =
                                 metrics.getClassification(metrics.valueIMC);
-
                             metricsList.add(metrics);
+                            saveProfiles(metricsList);
                             Navigator.push(
                               context,
                               MaterialPageRoute(
