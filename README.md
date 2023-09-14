@@ -1,16 +1,15 @@
 # imc_calculator
 
-A new Flutter project.
+O aplicativo coleta informações do usuário, incluindo nome, peso e altura, para calcular o IMC. Esses dados pessoais, juntamente com o valor do IMC calculado, serão armazenados em um banco de dados SQLite para manter um registro completo e organizado.
 
-## Getting Started
+A senha do usuário será armazenada localmente usando o SharedPreferences, o que é uma prática comum para manter as informações de login seguras e acessíveis apenas localmente no dispositivo do usuário.
 
-This project is a starting point for a Flutter application.
+Portanto, quando um usuário se cadastra e faz login, o aplicativo salvará o email e a senha localmente. As informações pessoais, como nome, peso, altura e valor do IMC, serão salvas no banco de dados SQLite. Isso permite que os usuários acessem seus dados pessoais e histórico de IMC sempre que fizerem login, enquanto mantém a senha segura e localmente armazenada.
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+https://github.com/Estevao-Nicolau/CalculeSeuIMC/assets/79880613/bea396e5-70d8-49f3-a057-f9187eec0e44
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+
+https://github.com/Estevao-Nicolau/CalculeSeuIMC/assets/79880613/bf8936aa-02ad-426d-a514-2f5d86b7fbe1
+
