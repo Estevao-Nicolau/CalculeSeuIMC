@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:imc_calculator/screen/calculated_history_list/card_profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,6 +23,24 @@ class ProfileListScreen extends StatelessWidget {
     return prefs.getDouble('imc');
   }
 
+  // Save the list of ProfileModel objects to shared preferences
+  Future<void> saveProfiles(List<ProfileModel> profiles) async {
+    final prefs = await SharedPreferences.getInstance();
+    final jsonProfiles = profiles.map((profile) => profile.toJson()).toList();
+    await prefs.setString('profiles', json.encode(jsonProfiles));
+  }
+
+  // Retrieve the list of ProfileModel objects from shared preferences
+  Future<List<ProfileModel>> getSavedProfiles() async {
+    final prefs = await SharedPreferences.getInstance();
+    final jsonString = prefs.getString('profiles');
+    if (jsonString != null) {
+      final jsonProfiles = json.decode(jsonString) as List<dynamic>;
+      return jsonProfiles.map((json) => ProfileModel.fromJson(json)).toList();
+    } else {
+      return [];
+    }
+  }
   final List<ProfileModel> profiles = [];
 
   @override
@@ -31,10 +51,12 @@ class ProfileListScreen extends StatelessWidget {
         itemBuilder: (context, index) {
           final metrics = metricsList[index];
           final imc = metrics.calculateIMC(metrics.weight, metrics.height);
-
+          final classification = metrics.getClassification(imc);
           saveIMC(imc);
+          profiles.add(metrics);
+          saveProfiles(profiles);
           return ProfileCard(
-            profile: profiles[index],
+            profile: metrics,
           );
         },
       ),

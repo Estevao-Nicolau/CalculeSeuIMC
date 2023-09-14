@@ -3,21 +3,30 @@ class ProfileModel {
   final double weight;
   final double height;
   final String date;
+  late String classification; // You can calculate and set this in the constructor.
+  late double valueIMC;
+
 
   ProfileModel({
     required this.name,
     required this.weight,
     required this.height,
     required this.date,
-  });
+  }) {
+    // Calculate IMC and set classification in the constructor.
+    valueIMC = calculateIMC(weight, height);
+    classification = getClassification(valueIMC);
+  }
+
   factory ProfileModel.fromJson(Map<String, dynamic> json) {
     return ProfileModel(
       name: json['name'] ?? '',
-      weight: json['peso'] ?? 0.0,
-      height: json['altura'] ?? 0.0,
+      weight: json['weight'] ?? 0.0,
+      height: json['height'] ?? 0.0,
       date: json['date'] ?? '',
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'name': name,
@@ -28,7 +37,7 @@ class ProfileModel {
   }
 
   double calculateIMC(double weight, double height) {
-    double imc = weight / (height * height);
+    final imc = weight / (height * height);
     return imc;
   }
 

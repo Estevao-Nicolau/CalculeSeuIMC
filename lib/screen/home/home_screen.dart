@@ -12,6 +12,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _dataController = TextEditingController();
   final TextEditingController _weightController = TextEditingController();
   final TextEditingController _heightController = TextEditingController();
   List<ProfileModel> metricsList = [];
@@ -25,52 +27,65 @@ class _HomeScreenState extends State<HomeScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Card(
-                elevation: 5.0,
+                elevation: 8.0,
                 child: Container(
                   padding: const EdgeInsets.all(16.0),
                   width: 300.0,
                   child: Column(
                     children: [
-                      const Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      CustomFormTextField(
+                        controller: _nameController,
+                        icon: Icons.person,
+                        label: 'Nome',
+                      ),
+                      CustomFormTextField(
+                        controller: _dataController,
+                        icon: Icons.date_range,
+                        label: 'Data',
+                      ),
+                      Row(
                         children: [
-                          Text(
-                            'João Silva  ',
-                            style: TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold,
+                          Expanded(
+                            child: CustomFormTextField(
+                              controller: _weightController,
+                              icon: Icons.balance_rounded,
+                              label: 'Peso',
                             ),
                           ),
+                          const SizedBox(width: 4),
                           Expanded(
-                            child: Text(
-                              '  04/09/2023',
-                              style: TextStyle(fontSize: 16.0),
+                            child: CustomFormTextField(
+                              controller: _heightController,
+                              icon: Icons.height,
+                              label: 'Altura',
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 10.0),
-                      CustomFormTextField(
-                        controller: _weightController,
-                        icon: Icons.balance_rounded,
-                        label: 'Peso',
-                      ),
-                      CustomFormTextField(
-                        controller: _heightController,
-                        icon: Icons.height,
-                        label: 'Altura',
-                      ),
                       ElevatedButton(
                         onPressed: () {
-                          final weight = double.parse(_heightController.text);
-                          final height = double.parse(_heightController.text);
-                          if (weight > 0 && height > 0) {
+                          final weight =
+                              double.tryParse(_weightController.text);
+                          final height =
+                              double.tryParse(_heightController.text);
+                          final name = _nameController.text;
+                          final date = _dataController.text;
+
+                          if (weight != null &&
+                              height != null &&
+                              name.isNotEmpty &&
+                              date.isNotEmpty) {
                             final metrics = ProfileModel(
-                              name: 'nicolau',
+                              name: name,
                               weight: weight,
                               height: height,
-                              date: '08/09/2023',
+                              date: date,
                             );
+                            metrics.valueIMC =
+                                metrics.calculateIMC(weight, height);
+                            metrics.classification =
+                                metrics.getClassification(metrics.valueIMC);
+
                             metricsList.add(metrics);
                             Navigator.push(
                               context,

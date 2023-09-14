@@ -33,7 +33,11 @@ class ProfileCard extends StatelessWidget {
               style: const TextStyle(fontSize: 16.0),
             ),
             Text(
-              'Valor Total: $profile',
+              'Classificação: ${profile.classification}',
+              style: const TextStyle(fontSize: 16.0),
+            ),
+            Text(
+              'IMC: ${profile.valueIMC}',
               style: const TextStyle(fontSize: 16.0),
             ),
             Text(
